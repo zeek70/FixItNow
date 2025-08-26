@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+    <h2>About Us</h2>
+    <img src="{% static 'core/images/aboutus.png' %}" alt="About Us" class="img-fluid" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+    
+    <p>
+        Welcome to FixItNow! We are a dedicated team focused on providing quick and reliable household services 
+        such as plumbing, gardening, electrical repairs, and more. Our goal is to make your life easier 
+        by connecting you with skilled professionals at the click of a button.
+    </p>
+{% endblock %}
