@@ -1,6 +1,6 @@
 from django.urls import path
 from core import views
-from.api_views import SignupView,LoginView
+from.api_views import SignupView,LoginView,CreateServiceRequestView
 urlpatterns = [
     path("",views.home,name="home"),
     path("requests/",views.service_request_list,name="service_request_list"),
@@ -11,6 +11,7 @@ urlpatterns = [
     path("requests/<int:pk>/delete/", views.delete_service_request, name="delete_service_request"),
     path('api/signup/', SignupView.as_view(), name='api-signup'),
     path('api/login/', LoginView.as_view(), name='api-login'),
+    path('service-requests/create/', CreateServiceRequestView.as_view(), name='create_service_request'),
     
 ]
 

@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from rest_framework import generics,permissions
 
 from .serializers import (
     UserSerializer,
@@ -18,6 +19,14 @@ from .serializers import (
     AboutSerializer,
 )
 from .models import ServiceRequest, ServiceUpdate, Category, About
+
+class CreateServiceRequestView(generics.CreateAPIView):
+    queryset = ServiceRequest.objects.all() 
+    serializer_class = ServiceRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]  
+    
+    def perform_create(self, serializer):
+        serializer.save()  
 
 class SignupView(APIView):
     def post(self, request):
@@ -42,8 +51,7 @@ class SignupView(APIView):
         refresh = RefreshToken.for_user(user)
         return Response({
             "message": "User created successfully",
-            "refresh": str(refresh),
-            "access": str(refresh.access_token),
+
         }, status=status.HTTP_201_CREATED)
 
 

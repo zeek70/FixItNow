@@ -3,7 +3,7 @@ from django.db import models
 class User(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=50)
-    phone = models.IntegerField()
+    phone = models.IntegerField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -29,7 +29,7 @@ class ServiceRequest(models.Model):
         ("painting", "Painting"),
         ("other", "Other"),
     ]
-
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE) 
     title = models.CharField(max_length=200)
     description = models.TextField()
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default="other")
@@ -51,4 +51,4 @@ class ServiceUpdate(models.Model):
     def __str__(self):
         return f"Update for {self.servicerequest.title} at {self.created_at}"
 class About (models.Model):
-    aboutus= models.TextField
+    aboutus= models.TextField()
