@@ -3,13 +3,9 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from rest_framework import generics,permissions
+from rest_framework import generics, permissions
 
 from .serializers import (
     UserSerializer,
@@ -21,12 +17,21 @@ from .serializers import (
 from .models import ServiceRequest, ServiceUpdate, Category, About
 
 class CreateServiceRequestView(generics.CreateAPIView):
-    queryset = ServiceRequest.objects.all() 
+    queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]  
+    permission_classes = [permissions.AllowAny]
     
-    def perform_create(self, serializer):
-        serializer.save()  
+    def post(self, request, *args, **kwargs):
+        # Simple username/password check
+        username = request.data.get('username')
+        password = request.data.get('password')
+        
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if not user:
+                return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        return super().post(request, *args, **kwargs)
 
 class SignupView(APIView):
     def post(self, request):
@@ -45,16 +50,12 @@ class SignupView(APIView):
         user = User.objects.create(
             username=username,
             email=email,
-            password=make_password(password) 
+            password=make_password(password)
         )
 
-        refresh = RefreshToken.for_user(user)
         return Response({
             "message": "User created successfully",
-
         }, status=status.HTTP_201_CREATED)
-
-
 
 class LoginView(APIView):
     def post(self, request):
@@ -67,28 +68,33 @@ class LoginView(APIView):
             return Response({"error": "Invalid credentials"},
                             status=status.HTTP_401_UNAUTHORIZED)
 
-        refresh = RefreshToken.for_user(user)
         return Response({
             "message": "Login successful",
-            "refresh": str(refresh),
-            "access": str(refresh.access_token),
+            "user_id": user.id,
+            "username": user.username
         }, status=status.HTTP_200_OK)
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [permissions.AllowAny]
 
 class ServiceRequestViewSet(viewsets.ModelViewSet):
     queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
+    permission_classes = [permissions.AllowAny]
 
 class ServiceUpdateViewSet(viewsets.ModelViewSet):
     queryset = ServiceUpdate.objects.all()
     serializer_class = ServiceUpdateSerializer
+    permission_classes = [permissions.AllowAny]
 
 class AboutViewSet(viewsets.ModelViewSet):
     queryset = About.objects.all()
     serializer_class = AboutSerializer
+    permission_classes = [permissions.AllowAny]

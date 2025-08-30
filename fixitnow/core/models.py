@@ -29,11 +29,11 @@ class ServiceRequest(models.Model):
         ("painting", "Painting"),
         ("other", "Other"),
     ]
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE) 
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=200)
     description = models.TextField()
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default="other")
-    status = models.CharField(max_length=50, default="pending")  # for admin use
+    status = models.CharField(max_length=50, default="pending")  
 
     def __str__(self):
         return f"{self.title} - {self.category}"

@@ -1,4 +1,4 @@
-#!/Users/blan0/Desktop/FixItNow/env/bin/python3.12
+#!/Users/blan0/Desktop/FixItNow/FixItNow/env/bin/python3.12
 # -*- coding: utf-8 -*-
 import re
 import sys
