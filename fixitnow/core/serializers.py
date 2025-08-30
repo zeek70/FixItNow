@@ -21,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ServiceRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceRequest
-        fields = "__all__"
+        fields = ['title', 'description', 'category', 'status']
 
 
 class ServiceUpdateSerializer(serializers.ModelSerializer):
